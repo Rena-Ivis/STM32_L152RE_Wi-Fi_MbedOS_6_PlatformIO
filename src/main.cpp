@@ -21,8 +21,7 @@ SpwfSAInterface stmWifi;
 
 WiFiInterface *wifi;
 
-const char *sec2str(nsapi_security_t sec)
-{
+const char *sec2str(nsapi_security_t sec) {
     switch (sec)
     {
     case NSAPI_SECURITY_NONE:
@@ -41,8 +40,7 @@ const char *sec2str(nsapi_security_t sec)
     }
 }
 
-int scan_demo(WiFiInterface *wifi)
-{
+int scan_demo(WiFiInterface *wifi) {
     WiFiAccessPoint *ap;
 
     printf("Scan:\n");
@@ -69,42 +67,38 @@ int scan_demo(WiFiInterface *wifi)
     return count;
 }
 
-int main()
-{
+int main() {
     SocketAddress sa;
     int count = 0;
 
     printf("WiFi example\n");
 
     wifi = &stmWifi;
-    if (!wifi)
-    {
+    if (!wifi) {
         printf("ERROR: No WiFiInterface found.\n");
         return -1;
     }
 
     count = scan_demo(wifi);
-    if (count == 0)
-    {
+    if (count == 0) {
         printf("No WIFI APNs found - can't continue further.\n");
         return -1;
     }
 
-    printf("\nConnecting to %s...\n", "Mi");
-    int ret = wifi->connect("Mi", "12345678", NSAPI_SECURITY_WPA_WPA2);
-    if (ret != 0)
-    {
+    printf("\nConnecting to %s...\n", MBED_CONF_APP_WIFI_SSID);
+    int ret = wifi->connect(MBED_CONF_APP_WIFI_SSID, MBED_CONF_APP_WIFI_PASSWORD, NSAPI_SECURITY_WPA_WPA2);
+    if (ret != 0) {
         printf("\nConnection error: %d\n", ret);
         return -1;
     }
 
     printf("Success\n\n");
     printf("MAC: %s\n", wifi->get_mac_address());
-    wifi -> get_ip_address(&sa);
+    wifi->get_ip_address(&sa);
     printf("IP: %s\r\n", sa.get_ip_address());
-    wifi -> get_netmask(&sa);
+    wifi->get_netmask(&sa);
     printf("Netmask: %s\r\n", sa.get_ip_address());
-    wifi -> get_gateway(&sa);
+    wifi->get_gateway(&sa);
     printf("Gateway: %s\r\n", sa.get_ip_address());
     printf("RSSI: %d\n\n", wifi->get_rssi());
 
